@@ -1,6 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
+import { Router } from 'react-router-dom';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+import { CssBaseline } from '@material-ui/core';
+
+import { history } from './helpers';
+import { App } from './app/Index';
+
+ReactDOM.render(
+  <Router history={history}>
+    <CssBaseline />
+    <App />
+  </Router>,
+  document.getElementById('root')
+);
