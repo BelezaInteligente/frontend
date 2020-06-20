@@ -27,5 +27,3 @@ package-lock.json
 yarn.lock
 
 .vscode/
-
-src/helpers
