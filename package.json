@@ -1,14 +1,20 @@
 {
   "name": "frontend",
   "version": "0.1.0",
+  "homepage": "http://belezainteligente.app",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.10.1",
     "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.56",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "axios": "^0.19.2",
     "formik": "^2.1.4",
+    "material-table": "^1.62.0",
+    "powerbi-client": "^2.13.2",
+    "powerbi-report-component": "^2.4.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
@@ -49,7 +55,7 @@
   },
   "lint-staged": {
     "*.+(js|jsx)": [
-      "eslint --fix",
+      "eslint --fix --ignore-pattern node_modules",
       "git add"
     ],
     "*.+(json|css|md)": [

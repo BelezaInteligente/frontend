@@ -10,9 +10,11 @@ import {
   Button,
   FormHelperText,
   Paper,
-  makeStyles,
+  Collapse,
 } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import { MailOutline, LockOutlined, Visibility, VisibilityOff } from '@material-ui/icons';
+import { Alert, AlertTitle } from '@material-ui/lab';
 
 import { accountService } from '../../services';
 
@@ -20,30 +22,21 @@ const useStyles = makeStyles((theme) => ({
   root: {
     height: '90vh',
     width: '100%',
-  },
-  outlinedRoot: {
-    '&:hover': {
-      borderColor: 'red',
+    '& > * + *': {
+      marginTop: theme.spacing(2),
     },
   },
-  emailInput: {
+  inputField: {
     width: 300,
   },
   paper: {
     padding: '1rem',
   },
-  password: {
-    width: 300,
-    '&::placeholder': {
-      fontStyle: 'italic',
-      paddingLeft: '0.5rem',
-    },
-  },
   button: {
     margin: theme.spacing(1),
     fontSize: 16,
     padding: '6px 12px',
-    width: 200,
+    width: 180,
     lineHeight: 1.5,
   },
   forgotLink: {
@@ -57,6 +50,9 @@ function Login({ history, location }) {
 
   const [passwordType, setPasswordType] = useState(true);
   const [visibility, setVisibility] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState('');
+
   const { handleSubmit, handleChange, values, errors, touched } = useFormik({
     initialValues: {
       email: '',
@@ -71,10 +67,19 @@ function Login({ history, location }) {
         .required('É necessário informar a senha!'),
     }),
     onSubmit: (values) => {
-      console.log(values);
-      accountService.login(values.email, values.password);
-      const { from } = location.state || { from: { pathname: '/' } };
-      history.push(from);
+      accountService.login(values)
+        .then(() => {
+          //const { from } = location.state || { from: { pathname: '/' } };
+          history.push('/dashboard');
+        })
+        .catch(error => {
+          setMessage(error.message);
+          setOpen(true);
+          setTimeout(() => {
+            setOpen(false);
+            setMessage('');
+          }, 5000);
+        })
     },
   });
 
@@ -101,21 +106,19 @@ function Login({ history, location }) {
             </Grid>
             <Grid item>
               <TextField
-                size="small"
                 id="email"
                 name="email"
+                label="Email"
                 variant="outlined"
-                placeholder="email"
-                className={classes.emailInput}
+                size="small"
+                placeholder=" email@email.com.br"
+                className={classes.inputField}
                 onChange={handleChange}
                 value={values.email}
                 InputProps={{
-                  classes: {
-                    input: classes.outlinedRoot,
-                  },
                   startAdornment: <MailOutline color="primary" />,
                 }}
-                error={touched.email && errors.email ? true : null}
+                error={touched.email && errors.email ? true : ''}
               />
               <FormHelperText error={errors.email}>{errors.email}</FormHelperText>
             </Grid>
@@ -123,25 +126,27 @@ function Login({ history, location }) {
               <TextField
                 id="password"
                 name="password"
+                label="Senha"
                 variant="outlined"
                 size="small"
-                placeholder="senha"
+                placeholder=" Senha"
                 onChange={handleChange}
                 value={values.password}
-                className={classes.password}
+                className={classes.inputField}
                 type={passwordType ? 'password' : 'text'}
                 InputProps={{
-                  classes: { input: classes.password },
                   startAdornment: <LockOutlined color="primary" />,
                   endAdornment: visibility ? (
                     <Visibility color="primary" onClick={handleClickVisibility} />
                   ) : (
-                    <VisibilityOff color="primary" onClick={handleClickVisibility} />
-                  ),
+                      <VisibilityOff color="primary" onClick={handleClickVisibility} />
+                    ),
                 }}
-                error={touched.password && errors.password ? true : null}
+                error={Boolean(touched.password && errors.password)}
               />
-              <FormHelperText error={errors.password}>{errors.password}</FormHelperText>
+              <FormHelperText error={Boolean(touched.password && errors.password)}>
+                {touched.password && errors.password ? errors.password : ''}
+              </FormHelperText>
             </Grid>
             <Grid item>
               <Button
@@ -163,6 +168,12 @@ function Login({ history, location }) {
             </Grid>
           </Grid>
         </form>
+        <Collapse in={open}>
+          <Alert severity="error">
+            <AlertTitle>Erro</AlertTitle>
+            Não foi possível realizar o login — <strong>{message}!</strong>
+          </Alert>
+        </Collapse>
       </Paper>
     </Grid>
   );

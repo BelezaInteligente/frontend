@@ -5,6 +5,7 @@ import Container from '@material-ui/core/Container';
 
 import { Login } from './Login';
 import { ForgotPassword } from './ForgotPassword';
+import { ResetPassword } from './ResetPassword';
 import { accountService } from '../../services';
 
 function Account({ history, match }) {
@@ -22,6 +23,7 @@ function Account({ history, match }) {
         <Switch>
           <Route path={`${path}/login`} component={Login} />
           <Route path={`${path}/forgotpassword`} component={ForgotPassword} />
+          <Route path={`${path}/resetpassword`} component={ResetPassword} />
         </Switch>
       </Container>
     </>

@@ -4,7 +4,7 @@ import { Route, Switch } from 'react-router-dom';
 import { Grid, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
-import { ListGoal } from './ListGoal';
+import { DetailDashboard } from './DetailDashboard';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -15,16 +15,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Goal({ match }) {
+function Dashboard({ match }) {
   const { path } = match;
   const classes = useStyles();
 
   return (
     <Grid>
-      <Grid item xs={12} md={8} lg={9}>
+      <Grid item>
         <Paper className={classes.paper}>
           <Switch>
-            <Route path={path} component={ListGoal} />
+            <Route path={path} component={DetailDashboard} />
           </Switch>
         </Paper>
       </Grid>
@@ -32,4 +32,4 @@ function Goal({ match }) {
   );
 }
 
-export { Goal };
+export { Dashboard };

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { useFormik } from 'formik';
@@ -10,9 +10,12 @@ import {
   Button,
   FormHelperText,
   Paper,
-  makeStyles,
+  Collapse
 } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import { MailOutline } from '@material-ui/icons';
+import { Alert, AlertTitle } from '@material-ui/lab';
+import { accountService } from '../../services';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,6 +48,7 @@ const useStyles = makeStyles((theme) => ({
 
 function ForgotPassword({ history, location }) {
   const classes = useStyles();
+  const [open, setOpen] = useState(false);
 
   const { handleSubmit, handleChange, values, errors } = useFormik({
     initialValues: {
@@ -55,7 +59,23 @@ function ForgotPassword({ history, location }) {
         .email('O e-mail é inválido!')
         .required('O e-mail é obrigatório!'),
     }),
-    onSubmit: (values) => {},
+    onSubmit: (values) => {
+      setOpen(true);
+      accountService.forgotPassword(values.email)
+        .then(() => {
+          values.email = '';
+          setTimeout(() => {
+            setOpen(false)
+          }, 5000);
+        })
+        .catch(error => {
+          setOpen(true);
+          values.email = '';
+          setTimeout(() => {
+            setOpen(false);
+          }, 5000);
+        })
+    },
   });
 
   return (
@@ -76,11 +96,12 @@ function ForgotPassword({ history, location }) {
             </Grid>
             <Grid item>
               <TextField
-                size="small"
                 id="email"
                 name="email"
+                label="Email"
                 variant="outlined"
-                placeholder="email"
+                size="small"
+                placeholder=" email@email.com.br"
                 onChange={handleChange}
                 value={values.email}
                 className={classes.emailInput}
@@ -118,6 +139,12 @@ function ForgotPassword({ history, location }) {
             </Grid>
           </Grid>
         </form>
+        <Collapse in={open}>
+          <Alert severity="success">
+            <AlertTitle>Sucesso</AlertTitle>
+            Uma nova senha foi enviadao para o seu email — <strong>{values.email}!</strong>
+          </Alert>
+        </Collapse>
       </Paper>
     </Grid>
   );

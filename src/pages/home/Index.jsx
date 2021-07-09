@@ -1,29 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
-import { Typography, makeStyles } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 
 import { accountService } from '../../services';
 
-const useStyles = makeStyles((theme) => ({
-  header: {
-    position: 'relative',
-  },
-}));
 
 function Home() {
-  const classes = useStyles();
-  const [user, setUser] = useState({});
-
-  useEffect(() => {
-    const subscription = accountService.user.subscribe((x) => setUser(x));
-    return subscription.unsubscribe;
-  }, []);
+  const user = accountService.userValue;
 
   return (
-    <div className={classes.header}>
-      <Typography>Bem-vindo, {`${user}`}!</Typography>
-    </div>
+    <>
+      <Typography variant="h5" align="left" color="textPrimary" component="p">
+        Bem vindo,
+      </Typography>
+      <Typography variant="h5" align="left" color="textSecondary" component="p">
+        {user.name}
+      </Typography>
+    </>
   );
 }
 
 export { Home };
+
+      // <Typography variant="h5" align="left" color="textPrimary" component="p">
+      //   Bem vindo ao Beleza Inteligente
+      // </Typography>
+      // <Typography variant="h5" align="left" color="textSecondary" component="p">
+      //   Faça login para vizualizar seus relatórios!
+      // </Typography>

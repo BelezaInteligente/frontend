@@ -1,29 +1,34 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { Route, Switch } from 'react-router-dom';
 
-import { Typography, makeStyles } from '@material-ui/core';
+import { Grid, Paper } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 
-import { accountService } from '../../services';
+import { Details } from './Details';
 
 const useStyles = makeStyles((theme) => ({
-  header: {
-    position: 'relative',
+  paper: {
+    padding: theme.spacing(2),
+    display: 'flex',
+    overflow: 'auto',
+    flexDirection: 'column',
   },
 }));
 
 function Profile({ match }) {
   const { path } = match;
   const classes = useStyles();
-  const [user, setUser] = useState({});
-
-  useEffect(() => {
-    const subscription = accountService.user.subscribe((x) => setUser(x));
-    return subscription.unsubscribe;
-  }, []);
 
   return (
-    <div className={classes.header}>
-      <Typography>Email: {`${user}`}!</Typography>
-    </div>
+    <Grid>
+      <Grid item xs={12} md={8} lg={9}>
+        <Paper className={classes.paper}>
+          <Switch>
+            <Route path={path} component={Details} />
+          </Switch>
+        </Paper>
+      </Grid>
+    </Grid>
   );
 }
 

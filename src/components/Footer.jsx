@@ -1,14 +1,32 @@
 import React from 'react';
 
-import { Typography } from '@material-ui/core';
+import { Container, Typography } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles((theme) => ({
+  footer: {
+    padding: 5,
+    textAlign: "center",
+    left: 0,
+    bottom: 0,
+    right: 0,
+  },
+}));
 
 function Footer() {
+  const classes = useStyles();
+
   return (
-    <div style={{ maxWidth: 700, margin: 'auto', textAlign: 'center' }}>
-      <Typography variant="caption" align={'center'}>
-        Desenvolvido por Eduardo Kraus Nunes - ekrausnunes@gmail.com © Copyright 2020
-      </Typography>
-    </div>
+    <footer className={classes.footer}>
+      <Container maxWidth="sm">
+        <Typography variant="body2" color="textSecondary">
+          Copyright ©
+          BelezaInteligente - contato@belezainteligente.app
+          {' '}
+          {new Date().getFullYear()}.
+        </Typography>
+      </Container>
+    </footer>
   );
 }
 
